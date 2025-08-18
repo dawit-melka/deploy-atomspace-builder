@@ -1,0 +1,14 @@
+[submodule "custom-atomspace-builder"]
+	path = custom-atomspace-builder
+	url = https://github.com/rejuve-bio/custom-atomspace-builder
+[submodule "annotation-query-backend-general"]
+	path = annotation-query-backend-general
+	url = https://github.com/rejuve-bio/annotation-query-backend-general
+	branch = feature/mork-support
+[submodule "annotation-tool"]
+	path = annotation-tool
+	url = https://github.com/yisehak-awm/annotation-tool.git
+	branch = writer
+[submodule "MORK"]
+	path = MORK
+	url = https://github.com/DeazStar/MORK
