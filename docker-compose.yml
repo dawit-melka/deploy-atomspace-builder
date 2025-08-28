@@ -93,8 +93,8 @@ services:
     container_name: annotation_service
     volumes:
       - ./annotation-query-backend-general:/app
-      - "${SCHEMA_DATA_VOLUME}"
-      # -
+      - ./custom-atomspace-builder/output:/shared/output
+      # - "${SCHEMA_DATA_VOLUME}"
     ports:
       - "${APP_PORT}:${APP_PORT}"
     # for now use development server till we can figure out
@@ -147,22 +147,6 @@ services:
     networks:
       - atomspace-network
 
-  annotation-tool:
-    build:
-      context: ./annotation-tool
-      dockerfile: dockerfile
-    container_name: annotation-tool
-    environment:
-      - LOADER_URL=http://atomspace-api:8000
-      - ANNOTATION_URL=http://annotation_service:5800
-    ports:
-      - "3000:3000"
-    depends_on:
-      - atomspace-api
-      - annotation_service
-    networks:
-      - atomspace-network
-    restart: always
 
 volumes:
   # Custom Atomspace Builder
