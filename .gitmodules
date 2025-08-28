@@ -12,3 +12,4 @@
 [submodule "MORK"]
 	path = MORK
 	url = https://github.com/DeazStar/MORK
+	branch = server
