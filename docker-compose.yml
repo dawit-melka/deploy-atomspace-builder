@@ -4,9 +4,7 @@
 
 services:
   atomspace-api:
-    build:
-      context: ./custom-atomspace-builder
-      dockerfile: Dockerfile
+    image: deazstar/custom-query-builder:custom-atomspace-api
     container_name: atomspace-api
     ports:
       - "8001:8001"
@@ -21,7 +19,6 @@ services:
       - API_PORT=8001
     volumes:
       - ./custom-atomspace-builder/output:/app/output
-      - ./custom-atomspace-builder/config.yaml:/app/config.yaml
       - atomspace_logs:/app/logs
       - shared_output:/shared/output
     depends_on:
@@ -37,8 +34,8 @@ services:
     image: neo4j:5.15.0
     container_name: neo4j-atomspace
     ports:
-      - "7787:7687"
-      - "7574:7474"
+      - "7474:7474"
+      - "7687:7687"
     environment:
       - NEO4J_AUTH=neo4j/atomspace123
       - NEO4J_PLUGINS=["apoc"]
@@ -89,12 +86,9 @@ services:
 
   # Annotation Query Backend General
   annotation_service:
-    build:
-      context: ./annotation-query-backend-general
-      dockerfile: Dockerfile
+    image: deazstar/custom-query-builder:annotation-service-backend-general
     container_name: annotation_service
     volumes:
-      - ./annotation-query-backend-general:/app
       - ./custom-atomspace-builder/output:/shared/output
     ports:
       - "5800:5800"
@@ -111,7 +105,7 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - REDIS_EXPIRATION=3600
       - MORK_URL=http://mork:8231
-      - NEO4J_URL=http://neo4j:7474
+      - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USERNAME=neo4j
       - NEO4J_PASSWORD=atomspace123
     networks:
@@ -123,7 +117,7 @@ services:
     volumes:
       - mongo_data:/data/db
     ports:
-      - "27021:27017"
+      - "27020:27017"
     restart: always
     networks:
       - atomspace-network
@@ -140,12 +134,10 @@ services:
       - atomspace-network
 
   annotation-tool:
-    build:
-      context: ./annotation-tool
-      dockerfile: dockerfile
+    image: deazstar/custom-query-builder:annotation-ui
     container_name: annotation-tool
     environment:
-      - LOADER_URL=http://127.0.0.1:8000
+      - LOADER_URL=http://127.0.0.1:8001
       - ANNOTATION_URL=http://127.0.0.1:5800
     ports:
       - "3000:3000"
@@ -156,9 +148,7 @@ services:
     restart: always
 
   mork:
-    build:
-      context: ./MORK
-      dockerfile: Dockerfile
+    image: deazstar/custom-query-builder:mork-pathmap
     container_name: mork_pathmap
     volumes:
       - ./MORK:/app # local code bind mount
