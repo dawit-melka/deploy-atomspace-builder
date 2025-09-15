@@ -31,7 +31,7 @@ chmod +x run.sh
 ### Optional
 
 * **Update service ports:**
-  Open the `atomspace-builder.env` file, update the ports as needed, and re-run the script.
+  Cd to `env` directory and Open the `atomspace-builder.env` file, update the ports as needed, and re-run the script.
 
 * **Stop and clean everything:**
 
