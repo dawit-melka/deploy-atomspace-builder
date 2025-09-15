@@ -1,4 +1,4 @@
-# Deploy AtomSpace Builder 
+# Deploy AtomSpace Builder
 
 ### Quick Start
 
@@ -8,21 +8,30 @@
 git clone --recursive https://github.com/dawit-melka/deploy-atomspace-builder.git
 ```
 
-2. **Go into the project folder:**
+2. **Navigate into the project folder:**
 
 ```bash
 cd deploy-atomspace-builder
 ```
 
-3. **Build and start all services:**
+3. **Make the script executable:**
 
 ```bash
-make build
+chmod +x run.sh
+```
+
+4. **Run the script:**
+
+```bash
+./run.sh
 ```
 
 ---
 
 ### Optional
+
+* **Update service ports:**
+  Cd to `env` directory and Open the `atomspace-builder.env` file, update the ports as needed, and re-run the script.
 
 * **Stop and clean everything:**
 
@@ -35,4 +44,3 @@ make down
 ```bash
 git submodule update --remote --merge
 ```
-

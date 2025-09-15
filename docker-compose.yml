@@ -1,13 +1,13 @@
 # ---------------------------------
-# All merged (with inline environment vars, no .env needed)
-#----------------------------------
+# Docker Compose with default ports (can be overridden by .env)
+# ---------------------------------
 
 services:
   atomspace-api:
     image: deazstar/custom-query-builder:custom-atomspace-api
     container_name: atomspace-api
     ports:
-      - "8001:8001"
+      - "${ATOMSPACE_API_PORT:-8001}:${API_PORT:-8001}"
     environment:
       - NEO4J_HOST=neo4j
       - NEO4J_PORT=7687
@@ -15,8 +15,8 @@ services:
       - HUGEGRAPH_HOST=hugegraph-atomspace
       - HUGEGRAPH_PORT=8080
       - HUGEGRAPH_GRAPH=hugegraph
-      - ANNOTATION_SERVICE_URL=http://annotation_service:5800/annotation/load
-      - API_PORT=8001
+      - ANNOTATION_SERVICE_URL=http://annotation_service:${ANNOTATION_SERVICE_PORT:-5800}/annotation/load
+      - API_PORT=${API_PORT:-8001}
     volumes:
       - ./custom-atomspace-builder/output:/app/output
       - atomspace_logs:/app/logs
@@ -73,7 +73,7 @@ services:
     image: hugegraph/hugegraph:1.5.0
     container_name: hugegraph-atomspace
     ports:
-      - "8080:8080"
+      - "${HUGEGRAPH_PORT_EXTERNAL:-8080}:8080"
       - "8182:8182"
     environment:
       - HUGEGRAPH_CONF=/hugegraph/conf
@@ -84,14 +84,11 @@ services:
       - atomspace-network
     restart: unless-stopped
 
-  # Annotation Query Backend General
   annotation_service:
     image: deazstar/custom-query-builder:annotation-service-backend-general
     container_name: annotation_service
-    volumes:
-      - ./custom-atomspace-builder/output:/shared/output
     ports:
-      - "5800:5800"
+      - "${ANNOTATION_SERVICE_PORT:-5800}:${APP_PORT:-5800}"
     command: python run.py
     restart: always
     depends_on:
@@ -99,7 +96,7 @@ services:
       - redis
     environment:
       - MONGO_URI=mongodb://mongodb:27017/annotation
-      - APP_PORT=5800
+      - APP_PORT=${APP_PORT:-5800}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_URL=redis://redis:6379/0
@@ -110,14 +107,16 @@ services:
       - NEO4J_PASSWORD=atomspace123
     networks:
       - atomspace-network
+    volumes:
+      - ./custom-atomspace-builder/output:/shared/output
 
   mongodb:
     image: mongo:latest
     container_name: mongodb
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
     volumes:
       - mongo_data:/data/db
-    ports:
-      - "27020:27017"
     restart: always
     networks:
       - atomspace-network
@@ -126,21 +125,21 @@ services:
     image: redis:latest
     container_name: redis
     ports:
-      - "6380:6379"
-    restart: always
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
+    restart: always
     networks:
       - atomspace-network
 
   annotation-tool:
     image: deazstar/custom-query-builder:annotation-ui
     container_name: annotation-tool
-    environment:
-      - LOADER_URL=http://127.0.0.1:8001
-      - ANNOTATION_URL=http://127.0.0.1:5800
     ports:
-      - "3000:3000"
+      - "${ANNOTATION_TOOL_PORT:-3000}:${ANNOTATION_TOOL_PORT:-3000}"
+    environment:
+      - LOADER_URL=http://127.0.0.1:${API_PORT:-8001}
+      - ANNOTATION_URL=http://127.0.0.1:${APP_PORT:-5800}
     depends_on:
       - atomspace-api
       - annotation_service
@@ -150,17 +149,16 @@ services:
   mork:
     image: deazstar/custom-query-builder:mork-pathmap
     container_name: mork_pathmap
+    ports:
+      - "8231:8231"
     volumes:
       - ./MORK:/app # local code bind mount
       - ./custom-atomspace-builder/output:/shared/output # shared volume
-    ports:
-      - "8231:8231"
     networks:
       - atomspace-network
     restart: always
 
 volumes:
-  # Custom Atomspace Builder
   neo4j_data:
   neo4j_logs:
   neo4j_import:
@@ -169,7 +167,6 @@ volumes:
   hugegraph_logs:
   atomspace_logs:
   shared_output:
-  # Annotation Query Backend General
   mongo_data:
   redis_data:
 
