@@ -15,9 +15,13 @@ cd deploy-atomspace-builder
 ```
 
 3. **Make the script executable:**
-
+Option 1: all KG (Neo4j, MORK, MeTTa)
 ```bash
 chmod +x run.sh
+```
+Option 2: MORK only deployment script
+```bash
+chmod +x run-mork.sh
 ```
 
 4. **Run the script:**
@@ -26,6 +30,9 @@ chmod +x run.sh
 ./run.sh
 ```
 
+```bash
+./run-mork.sh
+```
 ---
 
 ### Optional
