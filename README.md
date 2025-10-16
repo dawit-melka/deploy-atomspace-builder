@@ -24,7 +24,14 @@ chmod +x run.sh
 git clone --recursive https://github.com/dawit-melka/deploy-atomspace-builder.git
 
 cd deploy-atomspace-builder
+```
+Option 2.1:
+```bash
+make mork
+```
 
+Option 2.2:
+```bash
 chmod +x run-mork.sh
 
 ./run-mork.sh
