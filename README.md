@@ -1,53 +1,58 @@
 # Deploy AtomSpace Builder
 
-### Quick Start
+## Quick Start
 
-1. **Clone the repository with submodules:**
+### Prerequisites
+- Git with submodule support
+- Docker and Docker Compose
 
+### Deployment Options
+
+#### Option 1: Full Deployment (Neo4j + MORK + MeTTa)
 ```bash
 git clone --recursive https://github.com/dawit-melka/deploy-atomspace-builder.git
-```
 
-2. **Navigate into the project folder:**
-
-```bash
 cd deploy-atomspace-builder
-```
 
-3. **Make the script executable:**
-Option 1: all KG (Neo4j, MORK, MeTTa)
-```bash
 chmod +x run.sh
-```
-Option 2: MORK only deployment script
-```bash
-chmod +x run-mork.sh
-```
 
-4. **Run the script:**
-
-```bash
 ./run.sh
 ```
 
+#### Option 2: MORK Only Deployment
 ```bash
+git clone --recursive https://github.com/dawit-melka/deploy-atomspace-builder.git
+
+cd deploy-atomspace-builder
+
+chmod +x run-mork.sh
+
 ./run-mork.sh
 ```
----
 
-### Optional
+## Configuration
 
-* **Update service ports:**
-  Cd to `env` directory and Open the `atomspace-builder.env` file, update the ports as needed, and re-run the script.
+### Customizing Service Ports
+To modify service ports:
+```bash
+cd env
+nano atomspace-builder.env  # Edit port configurations
+cd ..
+./run.sh  # Re-deploy with new settings
+```
 
-* **Stop and clean everything:**
+## Management Commands
 
+### Stop and Clean Services
 ```bash
 make down
 ```
 
-* **Update submodules:**
-
+### Update Submodules
 ```bash
 git submodule update --remote --merge
 ```
+
+## Deployment Architecture
+- **Full Deployment**: Complete knowledge graph stack (Neo4j + MORK + MeTTa)
+- **MORK Only**: Lightweight deployment focusing on MORK components
