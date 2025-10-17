@@ -7,5 +7,4 @@
 	branch = feature/mork-support
 [submodule "annotation-tool"]
 	path = annotation-tool
-	url = https://github.com/yisehak-awm/annotation-tool.git
-	branch = writer
+	url = https://github.com/rejuve-bio/annotation-tool
