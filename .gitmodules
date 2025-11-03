@@ -8,3 +8,7 @@
 [submodule "annotation-tool"]
 	path = annotation-tool
 	url = https://github.com/rejuve-bio/annotation-tool
+[submodulre "mork"]
+	path = mork
+	url = https://github.com/DeazStar/MORK.git
+	branch = server
